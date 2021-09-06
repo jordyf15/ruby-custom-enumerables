@@ -84,10 +84,14 @@ module Enumerable
     none
   end
 
-  def my_count
+  def my_count obj = nil
     count = 0
-    self.size.times do |index|
-      count+=1 if yield self[index]
+    if obj != nil
+      self.size.times {|index| count+=1 if obj == self[index]}
+    elsif block_given?
+      self.size.times {|index| count+=1 if yield self[index]}
+    else
+      count = self.size
     end
     count
   end
@@ -206,29 +210,30 @@ end
 # p hashes.my_any?{|key, value| value>5}
 # puts "\n\n"
 
-puts "my_none? vs none?"
-numbers = [1,2,3,4,5]
-wrong_numbers = [1,3,5,7,9]
-p numbers.my_none? {|value| value %2 == 0}
-p numbers.none? {|value| value %2 == 0}
-p wrong_numbers.my_none? {|value| value %2 == 0}
-p wrong_numbers.none? {|value| value %2 == 0}
-p [].my_none?
-p [].none?
-p [nil, true].my_none?
-p [nil, true].none?
-p [].my_none?(Float)
-p [].none?(Float)
+# puts "my_none? vs none?"
+# numbers = [1,2,3,4,5]
+# wrong_numbers = [1,3,5,7,9]
+# p numbers.my_none? {|value| value %2 == 0}
+# p numbers.none? {|value| value %2 == 0}
+# p wrong_numbers.my_none? {|value| value %2 == 0}
+# p wrong_numbers.none? {|value| value %2 == 0}
+# p [].my_none?
+# p [].none?
+# p [nil, true].my_none?
+# p [nil, true].none?
+# p [].my_none?(Float)
+# p [].none?(Float)
 puts "\n\n"
 
-# puts "my_count vs count"
-# numbers = [1,2,3,4,5]
-# correct_numbers = [2,4,6,8,10]
-# p numbers.my_count {|value| value %2 == 0}
-# p numbers.count {|value| value %2 == 0}
-# p correct_numbers.my_count {|value| value %2 == 0}
-# p correct_numbers.count {|value| value %2 == 0}
-# puts "\n\n"
+puts "my_count vs count"
+ary = [1, 2, 4, 2]
+p ary.count  
+p ary.my_count                    
+p ary.count(2)     
+p ary.my_count(2)                         
+p ary.count {|x| x%2 == 0}  
+p ary.my_count {|x| x%2 == 0} 
+puts "\n\n"
 
 # puts "my_map vs map"
 # numbers = [1,2,3,4,5]
