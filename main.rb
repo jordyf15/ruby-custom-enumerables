@@ -38,11 +38,15 @@ module Enumerable
     end
   end
 
-  def my_all?
+  def my_all? pattern = nil
     all_result = true
-    self.size.times do |index|
-      all_result = false unless yield self[index]
-    end
+    if pattern != nil
+      self.size.times {|index| all_result = false unless pattern === self[index]}
+    elsif block_given?
+      self.size.times {|index| all_result = false unless yield self[index]}
+    else
+      self.size.times {|index| all_result = false if self[index] == false || self [index] == nil}
+    end    
     all_result
   end
 
@@ -123,31 +127,38 @@ end
 # p hashes.each_with_index
 # puts "\n\n"
 
-puts "my_select vs select"
-numbers = [1,2,3,4,5]
-p numbers.my_select {|value| value %2 == 0}
-p numbers.select {|value| value %2 == 0}
-p numbers.my_select {|value| value %2 != 0}
-p numbers.select {|value| value %2 != 0}
-p numbers.my_select
-p numbers.select 
-puts "\n"
-hashes = {a: 1, b: 2, c: 3, d: 4, e: 5}
-p hashes.my_select {|key, value| value %2 == 0}
-p hashes.select {|key, value| value %2 == 0}
-p hashes.my_select {|key, value| value %2 != 0}
-p hashes.select {|key, value| value %2 != 0}
-p hashes.my_select
-p hashes.select 
-
-# puts "my_all? vs all?"
+# puts "my_select vs select"
 # numbers = [1,2,3,4,5]
-# correct_numbers = [2,4,6,8,10]
-# p numbers.my_all? {|value| value %2 == 0}
-# p numbers.all? {|value| value %2 == 0}
-# p correct_numbers.my_all? {|value| value %2 == 0}
-# p correct_numbers.all? {|value| value %2 == 0}
-# puts "\n\n"
+# p numbers.my_select {|value| value %2 == 0}
+# p numbers.select {|value| value %2 == 0}
+# p numbers.my_select {|value| value %2 != 0}
+# p numbers.select {|value| value %2 != 0}
+# p numbers.my_select
+# p numbers.select 
+# puts "\n"
+# hashes = {a: 1, b: 2, c: 3, d: 4, e: 5}
+# p hashes.my_select {|key, value| value %2 == 0}
+# p hashes.select {|key, value| value %2 == 0}
+# p hashes.my_select {|key, value| value %2 != 0}
+# p hashes.select {|key, value| value %2 != 0}
+# p hashes.my_select
+# p hashes.select 
+
+puts "my_all? vs all?"
+numbers = [1,2,3,4,5]
+correct_numbers = [2,4,6,8,10]
+p numbers.my_all? {|value| value %2 == 0}
+p numbers.all? {|value| value %2 == 0}
+puts "\n"
+p correct_numbers.my_all? {|value| value %2 == 0}
+p correct_numbers.all? {|value| value %2 == 0}
+puts "\n"
+p numbers.my_all?(Numeric)
+p numbers.all?(Numeric)
+puts "\n"
+p numbers.my_all?
+p numbers.all?
+puts "\n\n"
 
 # puts "my_any? vs any?"
 # numbers = [1,2,3,4,5]
