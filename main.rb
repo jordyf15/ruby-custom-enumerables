@@ -22,11 +22,20 @@ module Enumerable
   end
 
   def my_select
-    selected_result = []
-    self.size.times do |index|
-      selected_result << self[index] if yield self[index]
+    return self.to_enum(:select) unless block_given?
+    if self.is_a?(Array)
+      selected_result = []
+      self.size.times {|index| selected_result << self[index] if yield self[index]}
+      selected_result
+    else
+      selected_result = {}
+      self.keys.size.times do |index|
+        if yield self.keys[index], self[self.keys[index]]
+          selected_result[self.keys[index]] = self[self.keys[index]] 
+        end
+      end
+      selected_result
     end
-    selected_result
   end
 
   def my_all?
@@ -85,19 +94,19 @@ module Enumerable
   end
 end
 
-puts "my_each vs each"
-numbers = [1,2,3,4,5]
-p numbers.my_each {|item| p item}
-p numbers.each {|item| p item}
-p numbers.my_each
-p numbers.each
-puts "\n"
-hashes = {a: 'a', b: 'b', c: 'c'}
-p hashes.my_each {|key, value| puts "#{key}: #{value}"}
-p hashes.each {|key, value| puts "#{key}: #{value}"}
-p hashes.my_each
-p hashes.each
-puts "\n\n"
+# puts "my_each vs each"
+# numbers = [1,2,3,4,5]
+# p numbers.my_each {|item| p item}
+# p numbers.each {|item| p item}
+# p numbers.my_each
+# p numbers.each
+# puts "\n"
+# hashes = {a: 'a', b: 'b', c: 'c'}
+# p hashes.my_each {|key, value| puts "#{key}: #{value}"}
+# p hashes.each {|key, value| puts "#{key}: #{value}"}
+# p hashes.my_each
+# p hashes.each
+# puts "\n\n"
 
 
 # puts "my_each_with_index vs each_with_index"
@@ -114,13 +123,22 @@ puts "\n\n"
 # p hashes.each_with_index
 # puts "\n\n"
 
-# puts "my_select vs select"
-# numbers = [1,2,3,4,5]
-# p numbers.my_select {|value| value %2 == 0}
-# p numbers.select {|value| value %2 == 0}
-# p numbers.my_select {|value| value %2 != 0}
-# p numbers.select {|value| value %2 != 0}
-# puts "\n\n"
+puts "my_select vs select"
+numbers = [1,2,3,4,5]
+p numbers.my_select {|value| value %2 == 0}
+p numbers.select {|value| value %2 == 0}
+p numbers.my_select {|value| value %2 != 0}
+p numbers.select {|value| value %2 != 0}
+p numbers.my_select
+p numbers.select 
+puts "\n"
+hashes = {a: 1, b: 2, c: 3, d: 4, e: 5}
+p hashes.my_select {|key, value| value %2 == 0}
+p hashes.select {|key, value| value %2 == 0}
+p hashes.my_select {|key, value| value %2 != 0}
+p hashes.select {|key, value| value %2 != 0}
+p hashes.my_select
+p hashes.select 
 
 # puts "my_all? vs all?"
 # numbers = [1,2,3,4,5]
