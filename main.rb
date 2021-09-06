@@ -1,11 +1,10 @@
 module Enumerable
   def my_each
+    return self.to_enum unless block_given?
     if self.is_a?(Array)
-      return self.to_enum unless block_given?
       self.size.times {|index| yield self[index]}
       self
     else
-      return self.to_enum unless block_given?
       self.keys.size.times {|key_index| yield self.keys[key_index], self[self.keys[key_index]]}
       self
     end
@@ -86,34 +85,34 @@ module Enumerable
   end
 end
 
-# puts "my_each vs each"
-# numbers = [1,2,3,4,5]
-# p numbers.my_each {|item| p item}
-# p numbers.each {|item| p item}
-# p numbers.my_each
-# p numbers.each
-# puts "\n"
-# hashes = {a: 'a', b: 'b', c: 'c'}
-# p hashes.my_each {|key, value| puts "#{key}: #{value}"}
-# p hashes.each {|key, value| puts "#{key}: #{value}"}
-# p hashes.my_each
-# p hashes.each
-# puts "\n\n"
-
-
-puts "my_each_with_index vs each_with_index"
+puts "my_each vs each"
 numbers = [1,2,3,4,5]
-p numbers.my_each_with_index {|value, index| p "#{index}: #{value}"}
-p numbers.each_with_index {|value,index| p "#{index}: #{value}"}
-p numbers.my_each_with_index
-p numbers.each_with_index
+p numbers.my_each {|item| p item}
+p numbers.each {|item| p item}
+p numbers.my_each
+p numbers.each
 puts "\n"
 hashes = {a: 'a', b: 'b', c: 'c'}
-p hashes.my_each_with_index {|value, index| p "#{index}: #{value}"}
-p hashes.each_with_index {|value, index| p "#{index}: #{value}"}
-p hashes.my_each_with_index
-p hashes.each_with_index
+p hashes.my_each {|key, value| puts "#{key}: #{value}"}
+p hashes.each {|key, value| puts "#{key}: #{value}"}
+p hashes.my_each
+p hashes.each
 puts "\n\n"
+
+
+# puts "my_each_with_index vs each_with_index"
+# numbers = [1,2,3,4,5]
+# p numbers.my_each_with_index {|value, index| p "#{index}: #{value}"}
+# p numbers.each_with_index {|value,index| p "#{index}: #{value}"}
+# p numbers.my_each_with_index
+# p numbers.each_with_index
+# puts "\n"
+# hashes = {a: 'a', b: 'b', c: 'c'}
+# p hashes.my_each_with_index {|value, index| p "#{index}: #{value}"}
+# p hashes.each_with_index {|value, index| p "#{index}: #{value}"}
+# p hashes.my_each_with_index
+# p hashes.each_with_index
+# puts "\n\n"
 
 # puts "my_select vs select"
 # numbers = [1,2,3,4,5]
