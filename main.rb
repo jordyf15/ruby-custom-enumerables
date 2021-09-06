@@ -52,6 +52,18 @@ module Enumerable
     end
     count
   end
+
+  def my_map
+    new_arr = []
+    self.size.times do |index|
+      if yield self[index]
+        new_arr << self[index]
+      else
+        new_arr << nil
+      end
+    end
+    new_arr
+  end
 end
 
 # puts "my_each vs each"
@@ -101,10 +113,19 @@ end
 # p wrong_numbers.none? {|value| value %2 == 0}
 # puts "\n\n"
 
-puts "my_count vs count"
+# puts "my_count vs count"
+# numbers = [1,2,3,4,5]
+# correct_numbers = [2,4,6,8,10]
+# p numbers.my_count {|value| value %2 == 0}
+# p numbers.count {|value| value %2 == 0}
+# p correct_numbers.my_count {|value| value %2 == 0}
+# p correct_numbers.count {|value| value %2 == 0}
+# puts "\n\n"
+
+puts "my_map vs map"
 numbers = [1,2,3,4,5]
-correct_numbers = [2,4,6,8,10]
-p numbers.my_count {|value| value %2 == 0}
-p numbers.count {|value| value %2 == 0}
-p correct_numbers.my_count {|value| value %2 == 0}
-p correct_numbers.count {|value| value %2 == 0}
+p numbers.my_map {|value| value}
+p numbers.map {|value| value}
+p numbers.my_map {|value| value if value %2 == 0}
+p numbers.map {|value| value if value %2 == 0}
+puts "\n\n"
