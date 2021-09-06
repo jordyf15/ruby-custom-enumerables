@@ -36,6 +36,14 @@ module Enumerable
     end
     any
   end
+  
+  def my_none?
+    none = true
+    self.size.times do |index|
+      none = false if yield self[index]
+    end
+    none
+  end
 end
 
 # puts "my_each vs each"
@@ -67,11 +75,20 @@ end
 # p correct_numbers.all? {|value| value %2 == 0}
 # puts "\n\n"
 
-puts "my_any? vs any?"
+# puts "my_any? vs any?"
+# numbers = [1,2,3,4,5]
+# wrong_numbers = [1,3,5,7,9]
+# p numbers.my_any? {|value| value %2 == 0}
+# p numbers.any? {|value| value %2 == 0}
+# p wrong_numbers.my_any? {|value| value %2 == 0}
+# p wrong_numbers.any? {|value| value %2 == 0}
+# puts "\n\n"
+
+puts "my_none? vs none?"
 numbers = [1,2,3,4,5]
 wrong_numbers = [1,3,5,7,9]
-p numbers.my_any? {|value| value %2 == 0}
-p numbers.any? {|value| value %2 == 0}
-p wrong_numbers.my_any? {|value| value %2 == 0}
-p wrong_numbers.any? {|value| value %2 == 0}
+p numbers.my_none? {|value| value %2 == 0}
+p numbers.none? {|value| value %2 == 0}
+p wrong_numbers.my_none? {|value| value %2 == 0}
+p wrong_numbers.none? {|value| value %2 == 0}
 puts "\n\n"
