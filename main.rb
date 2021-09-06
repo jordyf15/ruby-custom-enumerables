@@ -50,10 +50,24 @@ module Enumerable
     all_result
   end
 
-  def my_any?
+  def my_any? pattern = nil
     any = false
-    self.size.times do |index|
-      any = true if yield self[index]
+    if self.is_a?(Array)
+      if pattern != nil
+        self.size.times {|index| any = true if pattern === self[index]}
+      elsif block_given?
+        self.size.times {|index| any = true if yield self[index]}
+      else
+        self.size.times {|index| any = true unless self[index] == false || self[index] == nil}
+      end
+    else
+      if pattern != nil
+        self.keys.size.times {|index| any = true if self.assoc(self.keys[index]) == pattern}
+      elsif block_given?
+        self.keys.size.times {|index| any = true if yield self.keys[index], self[self.keys[index]]}
+      else
+        any = true unless self.empty?
+      end
     end
     any
   end
@@ -144,30 +158,49 @@ end
 # p hashes.my_select
 # p hashes.select 
 
-puts "my_all? vs all?"
-numbers = [1,2,3,4,5]
-correct_numbers = [2,4,6,8,10]
-p numbers.my_all? {|value| value %2 == 0}
-p numbers.all? {|value| value %2 == 0}
-puts "\n"
-p correct_numbers.my_all? {|value| value %2 == 0}
-p correct_numbers.all? {|value| value %2 == 0}
-puts "\n"
-p numbers.my_all?(Numeric)
-p numbers.all?(Numeric)
-puts "\n"
-p numbers.my_all?
-p numbers.all?
-puts "\n\n"
-
-# puts "my_any? vs any?"
+# puts "my_all? vs all?"
 # numbers = [1,2,3,4,5]
-# wrong_numbers = [1,3,5,7,9]
-# p numbers.my_any? {|value| value %2 == 0}
-# p numbers.any? {|value| value %2 == 0}
-# p wrong_numbers.my_any? {|value| value %2 == 0}
-# p wrong_numbers.any? {|value| value %2 == 0}
+# correct_numbers = [2,4,6,8,10]
+# p numbers.my_all? {|value| value %2 == 0}
+# p numbers.all? {|value| value %2 == 0}
+# puts "\n"
+# p correct_numbers.my_all? {|value| value %2 == 0}
+# p correct_numbers.all? {|value| value %2 == 0}
+# puts "\n"
+# p numbers.my_all?(Numeric)
+# p numbers.all?(Numeric)
+# puts "\n"
+# p numbers.my_all?
+# p numbers.all?
 # puts "\n\n"
+
+puts "my_any? vs any?"
+numbers = [1,2,3,4,5]
+wrong_numbers = [1,3,5,7,9]
+p numbers.my_any? {|value| value %2 == 0}
+p numbers.any? {|value| value %2 == 0}
+p wrong_numbers.my_any? {|value| value %2 == 0}
+p wrong_numbers.any? {|value| value %2 == 0}
+puts "\n"
+p numbers.my_any?
+p numbers.any?
+p numbers.my_any?(Integer)
+p numbers.any?(Integer)
+p numbers.my_any?(String)
+p numbers.any?(String)
+puts "\n"
+hashes = {a: 1, b: 2, c: 3, d: 4, e: 5}
+p hashes.any?
+p hashes.my_any?
+p hashes.any?([:a, 1])
+p hashes.my_any?([:a, 1])
+p hashes.any?([:a, 2])
+p hashes.my_any?([:a, 2])
+p hashes.any?{|key, value| value<5}
+p hashes.my_any?{|key, value| value<5}
+p hashes.any?{|key, value| value>5}
+p hashes.my_any?{|key, value| value>5}
+puts "\n\n"
 
 # puts "my_none? vs none?"
 # numbers = [1,2,3,4,5]
