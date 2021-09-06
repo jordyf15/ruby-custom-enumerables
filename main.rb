@@ -72,10 +72,14 @@ module Enumerable
     any
   end
   
-  def my_none?
+  def my_none? pattern = nil
     none = true
-    self.size.times do |index|
-      none = false if yield self[index]
+    if pattern != nil
+      self.size.times {|index| none = false if pattern === self[index]}
+    elsif block_given?
+      self.size.times{|index| none = false if yield self[index]}
+    else
+      self.size.times {|index| none = false if self[index]}
     end
     none
   end
@@ -174,42 +178,48 @@ end
 # p numbers.all?
 # puts "\n\n"
 
-puts "my_any? vs any?"
-numbers = [1,2,3,4,5]
-wrong_numbers = [1,3,5,7,9]
-p numbers.my_any? {|value| value %2 == 0}
-p numbers.any? {|value| value %2 == 0}
-p wrong_numbers.my_any? {|value| value %2 == 0}
-p wrong_numbers.any? {|value| value %2 == 0}
-puts "\n"
-p numbers.my_any?
-p numbers.any?
-p numbers.my_any?(Integer)
-p numbers.any?(Integer)
-p numbers.my_any?(String)
-p numbers.any?(String)
-puts "\n"
-hashes = {a: 1, b: 2, c: 3, d: 4, e: 5}
-p hashes.any?
-p hashes.my_any?
-p hashes.any?([:a, 1])
-p hashes.my_any?([:a, 1])
-p hashes.any?([:a, 2])
-p hashes.my_any?([:a, 2])
-p hashes.any?{|key, value| value<5}
-p hashes.my_any?{|key, value| value<5}
-p hashes.any?{|key, value| value>5}
-p hashes.my_any?{|key, value| value>5}
-puts "\n\n"
-
-# puts "my_none? vs none?"
+# puts "my_any? vs any?"
 # numbers = [1,2,3,4,5]
 # wrong_numbers = [1,3,5,7,9]
-# p numbers.my_none? {|value| value %2 == 0}
-# p numbers.none? {|value| value %2 == 0}
-# p wrong_numbers.my_none? {|value| value %2 == 0}
-# p wrong_numbers.none? {|value| value %2 == 0}
+# p numbers.my_any? {|value| value %2 == 0}
+# p numbers.any? {|value| value %2 == 0}
+# p wrong_numbers.my_any? {|value| value %2 == 0}
+# p wrong_numbers.any? {|value| value %2 == 0}
+# puts "\n"
+# p numbers.my_any?
+# p numbers.any?
+# p numbers.my_any?(Integer)
+# p numbers.any?(Integer)
+# p numbers.my_any?(String)
+# p numbers.any?(String)
+# puts "\n"
+# hashes = {a: 1, b: 2, c: 3, d: 4, e: 5}
+# p hashes.any?
+# p hashes.my_any?
+# p hashes.any?([:a, 1])
+# p hashes.my_any?([:a, 1])
+# p hashes.any?([:a, 2])
+# p hashes.my_any?([:a, 2])
+# p hashes.any?{|key, value| value<5}
+# p hashes.my_any?{|key, value| value<5}
+# p hashes.any?{|key, value| value>5}
+# p hashes.my_any?{|key, value| value>5}
 # puts "\n\n"
+
+puts "my_none? vs none?"
+numbers = [1,2,3,4,5]
+wrong_numbers = [1,3,5,7,9]
+p numbers.my_none? {|value| value %2 == 0}
+p numbers.none? {|value| value %2 == 0}
+p wrong_numbers.my_none? {|value| value %2 == 0}
+p wrong_numbers.none? {|value| value %2 == 0}
+p [].my_none?
+p [].none?
+p [nil, true].my_none?
+p [nil, true].none?
+p [].my_none?(Float)
+p [].none?(Float)
+puts "\n\n"
 
 # puts "my_count vs count"
 # numbers = [1,2,3,4,5]
