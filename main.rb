@@ -64,6 +64,18 @@ module Enumerable
     end
     new_arr
   end
+
+  def my_inject accumulator = nil
+    self.size.times do |index|
+      if accumulator == nil && index == 0
+        accumulator = self[index]
+        next
+      end
+      accumulator = yield accumulator, self[index]    
+    end
+    accumulator
+  end
+
 end
 
 # puts "my_each vs each"
@@ -122,10 +134,15 @@ end
 # p correct_numbers.count {|value| value %2 == 0}
 # puts "\n\n"
 
-puts "my_map vs map"
+# puts "my_map vs map"
+# numbers = [1,2,3,4,5]
+# p numbers.my_map {|value| value}
+# p numbers.map {|value| value}
+# p numbers.my_map {|value| value if value %2 == 0}
+# p numbers.map {|value| value if value %2 == 0}
+# puts "\n\n"
+
+puts "my_inject vs inject"
 numbers = [1,2,3,4,5]
-p numbers.my_map {|value| value}
-p numbers.map {|value| value}
-p numbers.my_map {|value| value if value %2 == 0}
-p numbers.map {|value| value if value %2 == 0}
-puts "\n\n"
+p numbers.my_inject {|sum, n| sum*n } 
+p numbers.inject {|sum, n| sum*n}
