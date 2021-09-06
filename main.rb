@@ -1,9 +1,14 @@
 module Enumerable
   def my_each
-    self.size.times do |index|
-      yield self[index]
+    if self.is_a?(Array)
+      return self.to_enum unless block_given?
+      self.size.times {|index| yield self[index]}
+      self
+    else
+      return self.to_enum unless block_given?
+      self.keys.size.times {|key_index| yield self.keys[key_index], self[self.keys[key_index]]}
+      self
     end
-    self
   end
 
   def my_each_with_index
@@ -75,14 +80,22 @@ module Enumerable
     end
     accumulator
   end
-
 end
 
-# puts "my_each vs each"
-# numbers = [1,2,3,4,5]
-# p numbers.my_each {|item| p item}
-# p numbers.each {|item| p item}
-# puts "\n\n"
+puts "my_each vs each"
+numbers = [1,2,3,4,5]
+p numbers.my_each {|item| p item}
+p numbers.each {|item| p item}
+p numbers.my_each
+p numbers.each
+puts "\n"
+hashes = {a: 'a', b: 'b', c: 'c'}
+p hashes.my_each {|key, value| puts "#{key}: #{value}"}
+p hashes.each {|key, value| puts "#{key}: #{value}"}
+p hashes.my_each
+p hashes.each
+puts "\n\n"
+
 
 # puts "my_each_with_index vs each_with_index"
 # numbers = [1,2,3,4,5]
@@ -142,7 +155,7 @@ end
 # p numbers.map {|value| value if value %2 == 0}
 # puts "\n\n"
 
-puts "my_inject vs inject"
-numbers = [1,2,3,4,5]
-p numbers.my_inject {|sum, n| sum*n } 
-p numbers.inject {|sum, n| sum*n}
+# puts "my_inject vs inject"
+# numbers = [1,2,3,4,5]
+# p numbers.my_inject {|sum, n| sum*n } 
+# p numbers.inject {|sum, n| sum*n}
