@@ -97,6 +97,7 @@ module Enumerable
   end
 
   def my_map
+    return self.to_enum(:map) unless block_given?
     new_arr = []
     self.size.times do |index|
       if yield self[index]
@@ -225,23 +226,25 @@ end
 # p [].none?(Float)
 puts "\n\n"
 
-puts "my_count vs count"
-ary = [1, 2, 4, 2]
-p ary.count  
-p ary.my_count                    
-p ary.count(2)     
-p ary.my_count(2)                         
-p ary.count {|x| x%2 == 0}  
-p ary.my_count {|x| x%2 == 0} 
-puts "\n\n"
-
-# puts "my_map vs map"
-# numbers = [1,2,3,4,5]
-# p numbers.my_map {|value| value}
-# p numbers.map {|value| value}
-# p numbers.my_map {|value| value if value %2 == 0}
-# p numbers.map {|value| value if value %2 == 0}
+# puts "my_count vs count"
+# ary = [1, 2, 4, 2]
+# p ary.count  
+# p ary.my_count                    
+# p ary.count(2)     
+# p ary.my_count(2)                         
+# p ary.count {|x| x%2 == 0}  
+# p ary.my_count {|x| x%2 == 0} 
 # puts "\n\n"
+
+puts "my_map vs map"
+numbers = [1,2,3,4,5]
+p numbers.my_map {|value| value}
+p numbers.map {|value| value}
+p numbers.my_map {|value| value if value %2 == 0}
+p numbers.map {|value| value if value %2 == 0}
+p numbers.my_map
+p numbers.map 
+puts "\n\n"
 
 # puts "my_inject vs inject"
 # numbers = [1,2,3,4,5]
